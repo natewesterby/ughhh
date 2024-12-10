@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head class="interactivecolor">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click the Button Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .game-container {
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 20px 40px;
+            font-size: 1.5em;
+            cursor: pointer;
+            background-color: lightblue;
+            border: 2px solid #000;
+            border-radius: 10px;
+        }
+        .score, .highscore {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        .time-left {
+            font-size: 1.5em;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="interactivecolor">
+    <p>
+    <a href="index.html" class="speedlinks">Back to resume</a> |
+    <a href="speed.html" class="speedlinks">Speed's Skills</a></p>
+    <h1>Click the Button Game</h1>
+    <p>Click the button as many times as you can in 10 seconds!</p>
+    
+    <div class="game-container">
+        <button class="btn" id="clickButton">Click Me!</button>
+        <p class="time-left" id="timeLeft">Time Left: 10s</p>
+        <p class="score" id="score">Score: 0</p>
+        <p class="highscore" id="highscore">High Score: 0</p>
+    </div>
+
+    <script>
+        const clickButton = document.getElementById("clickButton");
+        const timeLeftDisplay = document.getElementById("timeLeft");
+        const scoreDisplay = document.getElementById("score");
+        const highscoreDisplay = document.getElementById("highscore");
+
+        let score = 0;
+        let highScore = localStorage.getItem("highScore") ? parseInt(localStorage.getItem("highScore")) : 0;
+        let timer = 10;
+        let gameRunning = false;
+        let countdown;
+
+        // Display the high score when the page loads
+        highscoreDisplay.textContent = `High Score: ${highScore}`;
+
+        // Start the game when the button is clicked
+        clickButton.addEventListener("click", function() {
+            if (!gameRunning) {
+                gameRunning = true;
+                score = 0;
+                timer = 10;  // Reset the timer
+                scoreDisplay.textContent = `Score: ${score}`;
+                timeLeftDisplay.textContent = `Time Left: ${timer}s`;
+                startGame();
+            } else {
+                score++;
+                scoreDisplay.textContent = `Score: ${score}`;
+            }
+        });
+
+        // Function to start the game
+        function startGame() {
+            // Start the countdown timer
+            countdown = setInterval(function() {
+                timer--;
+                timeLeftDisplay.textContent = `Time Left: ${timer}s`;
+
+                if (timer <= 0) {
+                    clearInterval(countdown);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // End the game
+        function endGame() {
+            gameRunning = false;
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem("highScore", highScore);
+            }
+            highscoreDisplay.textContent = `High Score: ${highScore}`;
+            alert(`Game Over! Your score is ${score}. Click the button to play again.`);
+        }
+    </script>
+</body>
+</html>
